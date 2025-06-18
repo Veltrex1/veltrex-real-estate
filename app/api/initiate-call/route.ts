@@ -60,7 +60,7 @@ Please provide a lead score from 1-10 and a brief summary of their responses at 
 
     const callPayload = {
       phone_number: contact_info.phone,
-      from: PHONE_NUMBER,
+      // Remove the 'from' field to use Bland.ai's default number
       task: aiScript,
       voice: "maya",
       voice_settings: {
