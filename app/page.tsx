@@ -11,6 +11,12 @@ export default function Home() {
             <div className="text-2xl font-bold text-blue-600">Veltrex</div>
             <div className="flex space-x-4">
               <Link 
+                href="/pricing" 
+                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+              >
+                Get Started
+              </Link>
+              <Link 
                 href="/demo" 
                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
               >
@@ -57,6 +63,12 @@ export default function Home() {
           
           {/* Demo Links */}
           <div className="mt-8 flex justify-center space-x-4">
+            <Link 
+              href="/pricing" 
+              className="bg-green-600 text-white px-8 py-4 rounded-lg hover:bg-green-700 font-medium text-lg"
+            >
+              💰 Get Started - $5K Setup
+            </Link>
             <Link 
               href="/demo" 
               className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-medium"
