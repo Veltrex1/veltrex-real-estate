@@ -74,128 +74,128 @@ export default function PricingPage() {
 
         <div className="grid lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {/* Premium Package */}
-          <div className="bg-white border-2 border-blue-500 rounded-lg p-8 relative">
+          <div className="bg-white border-2 border-blue-500 rounded-lg p-8 relative flex flex-col">
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+              <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-bold">
                 MOST POPULAR
               </span>
             </div>
             
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold mb-2">PREMIUM</h2>
-              <p className="text-gray-600">Real Estate Revenue Accelerator</p>
+              <p className="text-gray-700 font-semibold">Real Estate Revenue Accelerator</p>
             </div>
 
             <div className="text-center mb-6">
               <div className="text-4xl font-bold mb-2">
-                $5,000 <span className="text-lg">setup</span>
+                $5,000 <span className="text-lg font-semibold">setup</span>
               </div>
               <div className="text-2xl font-bold text-blue-600">
-                + $3,500<span className="text-lg">/month</span>
+                + $3,500<span className="text-lg font-semibold">/month</span>
               </div>
-              <p className="text-green-600 font-semibold mt-2">
+              <p className="text-green-600 font-bold mt-2">
                 1,771% ROI for 15-agent agency
               </p>
             </div>
 
-            <ul className="space-y-3 mb-8 text-sm">
+            <ul className="space-y-3 mb-8 text-sm flex-grow">
               <li className="flex items-center">
-                <span className="text-green-500 mr-3 text-lg">✓</span>
-                60-second AI lead response system
+                <span className="text-green-500 mr-3 text-lg font-bold">✓</span>
+                <span className="font-semibold">60-second AI lead response system</span>
               </li>
               <li className="flex items-center">
-                <span className="text-green-500 mr-3 text-lg">✓</span>
-                12-question qualification with smart scoring
+                <span className="text-green-500 mr-3 text-lg font-bold">✓</span>
+                <span className="font-semibold">12-question qualification with smart scoring</span>
               </li>
               <li className="flex items-center">
-                <span className="text-green-500 mr-3 text-lg">✓</span>
-                Cold calling campaigns (FSBO, expired)
+                <span className="text-green-500 mr-3 text-lg font-bold">✓</span>
+                <span className="font-semibold">Cold calling campaigns (FSBO, expired)</span>
               </li>
               <li className="flex items-center">
-                <span className="text-green-500 mr-3 text-lg">✓</span>
-                Advanced follow-up automation
+                <span className="text-green-500 mr-3 text-lg font-bold">✓</span>
+                <span className="font-semibold">Advanced follow-up automation</span>
               </li>
               <li className="flex items-center">
-                <span className="text-green-500 mr-3 text-lg">✓</span>
-                Real-time performance dashboard
+                <span className="text-green-500 mr-3 text-lg font-bold">✓</span>
+                <span className="font-semibold">Real-time performance dashboard</span>
               </li>
               <li className="flex items-center">
-                <span className="text-green-500 mr-3 text-lg">✓</span>
-                CRM integrations (HubSpot, Salesforce)
+                <span className="text-green-500 mr-3 text-lg font-bold">✓</span>
+                <span className="font-semibold">CRM integrations (HubSpot, Salesforce)</span>
               </li>
               <li className="flex items-center">
-                <span className="text-green-500 mr-3 text-lg">✓</span>
-                White-label branding options
+                <span className="text-green-500 mr-3 text-lg font-bold">✓</span>
+                <span className="font-semibold">White-label branding options</span>
               </li>
               <li className="flex items-center">
-                <span className="text-green-500 mr-3 text-lg">✓</span>
-                Priority support & training
+                <span className="text-green-500 mr-3 text-lg font-bold">✓</span>
+                <span className="font-semibold">Priority support & training</span>
               </li>
             </ul>
 
             <button
               onClick={() => handleCheckout('premium')}
               disabled={isLoading}
-              className="w-full bg-blue-600 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-blue-700 disabled:opacity-50"
+              className="w-full bg-blue-600 text-white py-4 px-6 rounded-lg font-bold text-lg hover:bg-blue-700 disabled:opacity-50 mt-auto"
             >
               {isLoading ? 'Processing...' : 'Start with Premium'}
             </button>
           </div>
 
           {/* Essential Package */}
-          <div className="bg-white border border-gray-200 rounded-lg p-8">
+          <div className="bg-white border border-gray-200 rounded-lg p-8 flex flex-col">
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold mb-2">ESSENTIAL</h2>
-              <p className="text-gray-600">Lead Generation Essentials</p>
+              <p className="text-gray-700 font-semibold">Lead Generation Essentials</p>
             </div>
 
             <div className="text-center mb-6">
               <div className="text-4xl font-bold mb-2">
-                $2,500 <span className="text-lg">setup</span>
+                $2,500 <span className="text-lg font-semibold">setup</span>
               </div>
               <div className="text-2xl font-bold text-gray-700">
-                + $2,000<span className="text-lg">/month</span>
+                + $2,000<span className="text-lg font-semibold">/month</span>
               </div>
-              <p className="text-green-600 font-semibold mt-2">
+              <p className="text-green-600 font-bold mt-2">
                 1,150% ROI for 10-agent agency
               </p>
             </div>
 
-            <ul className="space-y-3 mb-8 text-sm">
+            <ul className="space-y-3 mb-8 text-sm flex-grow">
               <li className="flex items-center">
-                <span className="text-green-500 mr-3 text-lg">✓</span>
-                60-second AI lead response
+                <span className="text-green-500 mr-3 text-lg font-bold">✓</span>
+                <span className="font-semibold">60-second AI lead response</span>
               </li>
               <li className="flex items-center">
-                <span className="text-green-500 mr-3 text-lg">✓</span>
-                8-question qualification system
+                <span className="text-green-500 mr-3 text-lg font-bold">✓</span>
+                <span className="font-semibold">8-question qualification system</span>
               </li>
               <li className="flex items-center">
-                <span className="text-green-500 mr-3 text-lg">✓</span>
-                Basic appointment booking
+                <span className="text-green-500 mr-3 text-lg font-bold">✓</span>
+                <span className="font-semibold">Basic appointment booking</span>
               </li>
               <li className="flex items-center">
-                <span className="text-green-500 mr-3 text-lg">✓</span>
-                Simple follow-up automation
+                <span className="text-green-500 mr-3 text-lg font-bold">✓</span>
+                <span className="font-semibold">Simple follow-up automation</span>
               </li>
               <li className="flex items-center">
-                <span className="text-green-500 mr-3 text-lg">✓</span>
-                Standard CRM integrations
+                <span className="text-green-500 mr-3 text-lg font-bold">✓</span>
+                <span className="font-semibold">Standard CRM integrations</span>
               </li>
               <li className="flex items-center">
-                <span className="text-green-500 mr-3 text-lg">✓</span>
-                Basic dashboard and reporting
+                <span className="text-green-500 mr-3 text-lg font-bold">✓</span>
+                <span className="font-semibold">Basic dashboard and reporting</span>
               </li>
               <li className="flex items-center">
-                <span className="text-green-500 mr-3 text-lg">✓</span>
-                Email support
+                <span className="text-green-500 mr-3 text-lg font-bold">✓</span>
+                <span className="font-semibold">Email support</span>
               </li>
             </ul>
 
             <button
               onClick={() => handleCheckout('essential')}
               disabled={isLoading}
-              className="w-full bg-gray-700 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-gray-800 disabled:opacity-50"
+              className="w-full bg-gray-700 text-white py-4 px-6 rounded-lg font-bold text-lg hover:bg-gray-800 disabled:opacity-50 mt-auto"
             >
               {isLoading ? 'Processing...' : 'Start with Essential'}
             </button>
