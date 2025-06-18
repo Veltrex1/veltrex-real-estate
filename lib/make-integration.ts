@@ -31,37 +31,36 @@ export class MakeIntegration {
   }
 
   async triggerNewLeadWorkflow(leadData: MakeWebhookData) {
-    const BLAND_API_KEY = process.env.BLAND_AI_API_KEY
-    
-    console.log('🔍 Debug - API Key present:', !!BLAND_API_KEY)
     console.log('🔍 Debug - Lead data:', leadData)
+    console.log('🔄 Triggering AI workflow for new lead')
+    console.log('📞 Workflow: Call lead → Qualify → Route to agent')
+    console.log('📧 Follow-up: Auto-nurture sequence for unqualified leads')
     
-    if (!BLAND_API_KEY || BLAND_API_KEY === 'demo-mode') {
-      console.log('⚠️ No Bland.ai API key found - using demo mode')
-      console.log('🔄 Demo Mode: Would trigger Make.com workflow for new lead')
-      console.log('📞 Workflow would: Call lead → Qualify → Route to agent')
-      console.log('📧 Follow-up: Auto-nurture sequence for unqualified leads')
-      
-      // Simulate workflow completion after delay
-      setTimeout(() => {
-        this.simulateCallCompletion(leadData.lead_id)
-      }, 3000) // 3 second delay to simulate AI call
-      
-      return { success: true, workflow_id: 'demo-workflow-123' }
-    }
-
-    // REAL BLAND.AI INTEGRATION
-    console.log('🤖 Initiating REAL AI call via Bland.ai')
-    console.log('📞 Phone number to call:', leadData.contact_info.phone)
-    
+    // Make API call to server to handle the actual calling
     try {
-      const callResult = await this.makeBlandAICall(leadData)
-      console.log('✅ Bland.ai call initiated successfully:', callResult)
-      return { success: true, call_id: callResult.call_id }
-    } catch (error: any) {
-      console.error('❌ Bland.ai call failed with error:', error)
-      console.error('Error details:', error?.message || 'Unknown error')
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/initiate-call`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(leadData)
+      })
+
+      const result = await response.json()
       
+      if (result.success) {
+        console.log('✅ AI call initiated successfully:', result)
+        return { success: true, call_id: result.call_id }
+      } else {
+        console.log('⚠️ API call failed, using demo mode:', result.error)
+        // Fallback to demo simulation
+        setTimeout(() => {
+          this.simulateCallCompletion(leadData.lead_id)
+        }, 3000)
+        return { success: true, workflow_id: 'demo-fallback-123' }
+      }
+    } catch (error: any) {
+      console.error('❌ Failed to initiate call:', error)
       // Fallback to demo mode if API fails
       console.log('🔄 Falling back to demo mode due to API error')
       setTimeout(() => {
