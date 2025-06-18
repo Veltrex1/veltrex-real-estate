@@ -31,7 +31,9 @@ export class MakeIntegration {
   }
 
   async triggerNewLeadWorkflow(leadData: MakeWebhookData) {
-    if (this.webhookUrl === 'demo-mode') {
+    const BLAND_API_KEY = process.env.BLAND_AI_API_KEY || 'demo-mode'
+    
+    if (BLAND_API_KEY === 'demo-mode') {
       console.log('🔄 Demo Mode: Would trigger Make.com workflow for new lead')
       console.log('📞 Workflow would: Call lead → Qualify → Route to agent')
       console.log('📧 Follow-up: Auto-nurture sequence for unqualified leads')
@@ -44,25 +46,119 @@ export class MakeIntegration {
       return { success: true, workflow_id: 'demo-workflow-123' }
     }
 
+    // REAL BLAND.AI INTEGRATION
+    console.log('🤖 Initiating REAL AI call via Bland.ai')
+    
     try {
-      const response = await fetch(this.webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          event_type: 'new_lead',
-          data: leadData
-        })
-      })
-
-      const result = await response.json()
-      console.log('✅ Make.com workflow triggered:', result)
-      return result
+      const callResult = await this.makeBlandAICall(leadData)
+      console.log('✅ Bland.ai call initiated:', callResult)
+      return { success: true, call_id: callResult.call_id }
     } catch (error) {
-      console.error('❌ Make.com workflow error:', error)
-      return { success: false, error }
+      console.error('❌ Bland.ai call failed:', error)
+      // Fallback to demo mode if API fails
+      setTimeout(() => {
+        this.simulateCallCompletion(leadData.lead_id)
+      }, 3000)
+      return { success: false, error, fallback: 'demo-mode' }
     }
+  }
+
+  // NEW: Real Bland.ai calling function
+  private async makeBlandAICall(leadData: MakeWebhookData) {
+    const BLAND_API_KEY = process.env.BLAND_AI_API_KEY!
+    const PHONE_NUMBER = process.env.BLAND_AI_PHONE_NUMBER || '+15551234567'
+    
+    // Get lead details for personalized script
+    const { contact_info } = leadData
+    const name = contact_info.name || 'there'
+    
+    // Dynamic AI script based on lead data
+    const aiScript = this.generateAIScript(leadData)
+    
+    const callPayload = {
+      phone_number: contact_info.phone,
+      from: PHONE_NUMBER,
+      task: aiScript,
+      voice: "maya", // Professional female voice
+      voice_settings: {
+        speed: 1.0,
+        stability: 0.7,
+        similarity_boost: 0.8
+      },
+      webhook: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhook/bland-ai`,
+      metadata: {
+        lead_id: leadData.lead_id,
+        agency_id: leadData.agency_id,
+        lead_name: name,
+        lead_email: contact_info.email
+      },
+      // Call configuration
+      answered_by_enabled: true,
+      wait_for_greeting: true,
+      record: true,
+      language: "en-US"
+    }
+
+    console.log('📞 Calling', contact_info.phone, 'for lead', leadData.lead_id)
+
+    const response = await fetch('https://api.bland.ai/v1/calls', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${BLAND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(callPayload)
+    })
+
+    if (!response.ok) {
+      const error = await response.text()
+      throw new Error(`Bland.ai API error: ${response.status} - ${error}`)
+    }
+
+    const result = await response.json()
+    return result
+  }
+
+  // Generate personalized AI script based on lead data
+  private generateAIScript(leadData: MakeWebhookData): string {
+    const { contact_info } = leadData
+    const name = contact_info.name || 'there'
+    
+    return `Hi ${name}, this is Sarah calling from Demo Real Estate Agency. I'm reaching out because you just submitted a request for a free market analysis on our website. 
+
+I have a few quick questions to make sure I connect you with the right specialist and provide you with the most accurate market information. This should only take about 2-3 minutes. Is now a good time?
+
+[Wait for response]
+
+Great! Let me ask you a few questions:
+
+1. I see you're interested in real estate - are you primarily looking to buy a home, sell your current home, or both?
+
+2. What's your timeline for making a move? Are you looking to do something in the next month or two, or is this more of a longer-term plan?
+
+3. For buying - do you currently have mortgage pre-approval, or would that be something you need to work on?
+
+4. What area or neighborhoods are you most interested in?
+
+5. Are you currently working with any other real estate agents?
+
+6. What's the main thing driving your decision to buy or sell right now?
+
+Based on your answers, I'll score this lead from 1-10:
+- 8-10: Ready to move quickly, qualified, highly motivated
+- 6-7: Good timeline and interest, some qualification needed  
+- 4-5: Longer timeline but serious interest
+- 1-3: Just researching, long-term follow-up needed
+
+After the questions, if they score 8+, say: "Perfect! Based on what you've told me, I'm going to connect you directly with [Agent Name], our specialist for [area]. They'll be able to help you immediately."
+
+If 6-7: "Great! I'll have one of our agents call you within the next hour to discuss your specific needs."
+
+If under 6: "Thanks for the information! I'll make sure you receive our weekly market updates and have one of our team members follow up with you."
+
+Always end with: "Thank you for your time today, and we'll be in touch soon!"
+
+Please provide a lead score from 1-10 and a brief summary of their responses at the end of the call.`
   }
 
   async triggerFollowUpSequence(leadId: string, leadScore: number) {
