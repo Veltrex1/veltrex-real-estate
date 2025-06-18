@@ -22,41 +22,27 @@ export async function POST(request: NextRequest) {
     const { contact_info } = leadData
     const name = contact_info.name || 'there'
     
-    const aiScript = `Hi ${name}, this is Sarah calling from Demo Real Estate Agency. I'm reaching out because you just submitted a request for a free market analysis on our website. 
+    const aiScript = `Hello! This is Sarah from Demo Real Estate Agency. You just requested a market analysis on our website. I have 5 quick questions to help match you with the right agent. This will take 2 minutes. Ready?
 
-I have a few quick questions to make sure I connect you with the right specialist and provide you with the most accurate market information. This should only take about 2-3 minutes. Is now a good time?
+Ask these questions one by one and wait for responses:
 
-[Wait for response]
+Question 1: Are you looking to buy or sell a home?
 
-Great! Let me ask you a few questions:
+Question 2: What's your timeline - next month, few months, or just exploring?
 
-1. I see you're interested in real estate - are you primarily looking to buy a home, sell your current home, or both?
+Question 3: Do you have mortgage pre-approval or need help with financing?
 
-2. What's your timeline for making a move? Are you looking to do something in the next month or two, or is this more of a longer-term plan?
+Question 4: What area are you interested in?
 
-3. For buying - do you currently have mortgage pre-approval, or would that be something you need to work on?
+Question 5: Are you working with another agent currently?
 
-4. What area or neighborhoods are you most interested in?
+After all 5 questions, score the lead:
+- Score 9-10 if: Ready soon AND pre-approved/cash AND no other agent
+- Score 7-8 if: Ready in 1-3 months AND getting financing AND available
+- Score 5-6 if: 3-6 month timeline OR needs financing help OR has some urgency
+- Score 1-4 if: Just exploring OR working with another agent OR no timeline
 
-5. Are you currently working with any other real estate agents?
-
-6. What's the main thing driving your decision to buy or sell right now?
-
-Based on your answers, I'll score this lead from 1-10:
-- 8-10: Ready to move quickly, qualified, highly motivated
-- 6-7: Good timeline and interest, some qualification needed  
-- 4-5: Longer timeline but serious interest
-- 1-3: Just researching, long-term follow-up needed
-
-After the questions, if they score 8+, say: "Perfect! Based on what you've told me, I'm going to connect you directly with our specialist. They'll be able to help you immediately."
-
-If 6-7: "Great! I'll have one of our agents call you within the next hour to discuss your specific needs."
-
-If under 6: "Thanks for the information! I'll make sure you receive our weekly market updates and have one of our team members follow up with you."
-
-Always end with: "Thank you for your time today, and we'll be in touch soon!"
-
-Please provide a lead score from 1-10 and a brief summary of their responses at the end of the call.`
+End by saying: "Thanks! Your score is [NUMBER] out of 10. We'll have an agent contact you soon. Have a great day!"`
 
     const callPayload = {
       phone_number: contact_info.phone,
@@ -76,7 +62,7 @@ Please provide a lead score from 1-10 and a brief summary of their responses at 
         lead_email: contact_info.email
       },
       answered_by_enabled: true,
-      wait_for_greeting: true,
+      wait_for_greeting: false,  // Don't wait - start talking immediately
       record: true,
       language: "en-US"
     }
