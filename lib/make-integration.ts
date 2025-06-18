@@ -31,9 +31,13 @@ export class MakeIntegration {
   }
 
   async triggerNewLeadWorkflow(leadData: MakeWebhookData) {
-    const BLAND_API_KEY = process.env.BLAND_AI_API_KEY || 'demo-mode'
+    const BLAND_API_KEY = process.env.BLAND_AI_API_KEY
     
-    if (BLAND_API_KEY === 'demo-mode') {
+    console.log('🔍 Debug - API Key present:', !!BLAND_API_KEY)
+    console.log('🔍 Debug - Lead data:', leadData)
+    
+    if (!BLAND_API_KEY || BLAND_API_KEY === 'demo-mode') {
+      console.log('⚠️ No Bland.ai API key found - using demo mode')
       console.log('🔄 Demo Mode: Would trigger Make.com workflow for new lead')
       console.log('📞 Workflow would: Call lead → Qualify → Route to agent')
       console.log('📧 Follow-up: Auto-nurture sequence for unqualified leads')
@@ -48,18 +52,22 @@ export class MakeIntegration {
 
     // REAL BLAND.AI INTEGRATION
     console.log('🤖 Initiating REAL AI call via Bland.ai')
+    console.log('📞 Phone number to call:', leadData.contact_info.phone)
     
     try {
       const callResult = await this.makeBlandAICall(leadData)
-      console.log('✅ Bland.ai call initiated:', callResult)
+      console.log('✅ Bland.ai call initiated successfully:', callResult)
       return { success: true, call_id: callResult.call_id }
-    } catch (error) {
-      console.error('❌ Bland.ai call failed:', error)
+    } catch (error: any) {
+      console.error('❌ Bland.ai call failed with error:', error)
+      console.error('Error details:', error?.message || 'Unknown error')
+      
       // Fallback to demo mode if API fails
+      console.log('🔄 Falling back to demo mode due to API error')
       setTimeout(() => {
         this.simulateCallCompletion(leadData.lead_id)
       }, 3000)
-      return { success: false, error, fallback: 'demo-mode' }
+      return { success: false, error: error?.message || 'Unknown error', fallback: 'demo-mode' }
     }
   }
 
